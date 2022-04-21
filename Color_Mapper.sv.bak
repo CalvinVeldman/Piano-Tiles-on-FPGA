@@ -14,8 +14,6 @@
 
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
-														BallX2, BallY2, BallX3, BallY3,
-														BallX4, BallY4,
                        output logic [7:0]  Red, Green, Blue );
     
     logic ball_on;
@@ -27,6 +25,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
        (DrawX <= BallX + Ball_size) &&
        (DrawY >= BallY - Ball_size) &&
        (DrawY <= BallY + Ball_size))
+
      New Ball: Generates (pixelated) circle by using the standard circle formula.  Note that while 
      this single line is quite powerful descriptively, it causes the synthesis tool to use up three
      of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
@@ -39,26 +38,8 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	  
     always_comb
     begin:Ball_on_proc
-         if ((DrawX >= BallX - Ball_size) &&
-       (DrawX <= BallX + Ball_size) &&
-       (DrawY >= BallY - Ball_size) &&
-       (DrawY <= BallY + Ball_size))
+        if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
             ball_on = 1'b1;
-			else if ((DrawX >= BallX2 - Ball_size) &&
-       (DrawX <= BallX2 + Ball_size) &&
-       (DrawY >= BallY2 - Ball_size) &&
-       (DrawY <= BallY2 + Ball_size))
-				ball_on = 1'b1;
-			else if ((DrawX >= BallX3 - Ball_size) &&
-       (DrawX <= BallX3 + Ball_size) &&
-       (DrawY >= BallY3 - Ball_size) &&
-       (DrawY <= BallY3 + Ball_size))
-				ball_on = 1'b1;
-			else if ((DrawX >= BallX4 - Ball_size) &&
-       (DrawX <= BallX4 + Ball_size) &&
-       (DrawY >= BallY4 - Ball_size) &&
-       (DrawY <= BallY4 + Ball_size))
-				ball_on = 1'b1;
         else 
             ball_on = 1'b0;
      end 
@@ -68,14 +49,14 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
         if ((ball_on == 1'b1)) 
         begin 
             Red = 8'hff;
-            Green = 8'hff;
-            Blue = 8'hff;
+            Green = 8'h55;
+            Blue = 8'h00;
         end       
         else 
         begin 
             Red = 8'h00; 
             Green = 8'h00;
-				Blue = 8'h7f - (DrawX[9:4]);     
+            Blue = 8'h7f - DrawX[9:3];
         end      
     end 
     
