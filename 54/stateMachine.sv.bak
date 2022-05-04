@@ -1,0 +1,22 @@
+module songState(input logic Reset,
+					  output logic block1, block2, block3, block4);
+
+enum logic [5:0] {  Halted, 
+						new_block1,
+						new_block2,
+						new_block3,
+						new_block4}   State, Next_state;   // Internal state logic
+		
+	always_ff @ (posedge Clk)
+	begin
+		if (Reset) 
+			State <= Halted;
+		else 
+			State <= Next_state;
+	end
+   
+	always_comb
+	
+	begin 
+		Next_state = state;
+		
