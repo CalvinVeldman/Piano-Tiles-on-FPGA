@@ -1,0 +1,16 @@
+module shifter(input Clk, [9:0] drawY, [8:0] drawX,
+                    output [7:0] red, green, blue);
+
+logic [6:0] counter;
+    always_ff @ (posedge drawX) 
+        begin
+            if(drawX == 0 && drawY == 0)
+                counter <= counter + 1;
+        end      
+
+always_comb begin		  
+                Red = {DrawX[3:0], DrawY[3:0]};
+                Blue = {DrawY[3:0], DrawX[3:0]};
+                Green ={counter ,DrawX[0]};   
+end				 
+endmodule

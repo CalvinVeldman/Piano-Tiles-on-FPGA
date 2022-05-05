@@ -1,5 +1,6 @@
-module  ball4 ( input Reset, frame_clk,
+module  ball4 ( input Reset, frame_clk, newNote, kill,
 					input [7:0] keycode,
+					input [3:0] speed,
                output [9:0]  BallX, BallY, BallS );
     
     logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
@@ -19,36 +20,52 @@ module  ball4 ( input Reset, frame_clk,
     begin: Move_Ball
         if (Reset)  // Asynchronous Reset
         begin 
-            Ball_Y_Motion <= -1; //Ball_Y_Step;
+            Ball_Y_Motion <= 0; //Ball_Y_Step;
 				Ball_X_Motion <= 10'd0; //Ball_X_Step;
-				Ball_Y_Pos <= Ball_Y_Center;
+				Ball_Y_Pos <= Ball_Y_Min;
 				Ball_X_Pos <= Ball_X_Center;
         end
+		  
+		  else if (newNote)  // Asynchronous Reset
+        begin 
+            Ball_Y_Motion <= 3 + speed; //Ball_Y_Step;
+				Ball_X_Motion <= 10'd0; //Ball_X_Step;
+				Ball_Y_Pos <= Ball_Y_Min;
+				Ball_X_Pos <= Ball_X_Center;
+        end
+		  
+		  else if(kill)
+		  begin
+				Ball_Y_Motion <= 0; //Ball_Y_Step;
+				Ball_X_Motion <= 10'd0; //Ball_X_Step;
+				Ball_Y_Pos <= Ball_Y_Center + 321;
+				Ball_X_Pos <= Ball_X_Center;
+		  end
            
         else 
         begin 
 				 if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )	 // Ball is at the bottom edge, BOUNCE!
 				 begin
-					  Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);  // 2's complement.
+					  Ball_Y_Motion <= 0;  // 2's complement.
 					  Ball_X_Motion <= 0;
-					  end
-					  
-				 else if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
-				 begin
-					  Ball_Y_Motion <= Ball_Y_Step;
-					  Ball_X_Motion <= 0;
-					  end
-				  else if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
-				  begin
-					  Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);  // 2's complement.
-					  Ball_Y_Motion <= 0;
-					  end
-				 else if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-				 begin
-					  Ball_X_Motion <= Ball_X_Step;
-					  Ball_Y_Motion <= 0;
-					  end
-					  
+				 end
+//					  
+//				 else if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
+//				 begin
+//					  Ball_Y_Motion <= Ball_Y_Step;
+//					  Ball_X_Motion <= 0;
+//					  end
+//				  else if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
+//				  begin
+//					  Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);  // 2's complement.
+//					  Ball_Y_Motion <= 0;
+//					  end
+//				 else if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
+//				 begin
+//					  Ball_X_Motion <= Ball_X_Step;
+//					  Ball_Y_Motion <= 0;
+//					  end
+//					  
 				 else 
 				 begin
 					  Ball_Y_Motion <= Ball_Y_Motion;  // Ball is somewhere in the middle, don't bounce, just keep moving

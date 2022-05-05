@@ -1,0 +1,55 @@
+module  score (input [9:0] drawX, drawY, 
+                    input [4:0] score,
+                    output to_color);    
+    //score x30
+    //screen is 640 x 480
+    //char1 location (14, 2)
+    //char0 location (26, 2)                
+font_rom first_digit(    .addr(address0), .data(data0)    );
+font_rom second_digit(    .addr(address1), .data(data1)    );
+    logic colorbit0, colorbit1;
+    logic [4:0] char0, char1;
+    logic [5:0] charcode0, charcode1;
+    logic [7:0] data0, data1;
+    logic [9:0] address0, address1, drawYmod, drawXmod0, drawXmod1;
+
+    assign         char1 = score/4'd10;
+    assign        drawYmod = drawY - 2'd2;
+    assign        drawXmod0 = drawX - 6'd26;
+    assign        drawXmod1 = drawX - 6'd14;
+    assign        charcode0 = char0 + 10'h30;
+    assign        charcode1 = char1 + 10'h30;
+    
+    always_comb 
+        begin
+        if(score < 10) 
+            begin
+            char0 = score;
+            end
+        
+        else
+            begin
+            char0 = score - char1 * 4'd10;
+            end
+        end
+    
+    assign        address0 = {charcode0, drawYmod[4:0]};
+    assign        address1 = {charcode1, drawYmod[4:0]};
+    assign        colorbit0 = data0[drawXmod0[3:0] ];
+    assign        colorbit1 = data1[drawXmod1[3:0] ];
+    always_comb
+    begin
+        if((drawY >= 2 && drawY <= 18) && (drawX >= 14 && drawX <= 34))
+            begin
+                if(colorbit0    || colorbit1)
+                    to_color = 1'b1;
+                else
+                    to_color = 1'b0;
+            end
+        else
+            begin
+                to_color  =1'b0;
+            end
+    end
+
+endmodule

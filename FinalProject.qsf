@@ -454,5 +454,12 @@ set_global_assignment -name SYSTEMVERILOG_FILE ball.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ball2.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ball3.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ball4.sv
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name SYSTEMVERILOG_FILE stateMachine.sv
+set_global_assignment -name SYSTEMVERILOG_FILE customClock.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Randomizer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE decoder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ScreenScore.sv
+set_global_assignment -name SYSTEMVERILOG_FILE font_rom.sv
+set_global_assignment -name SYSTEMVERILOG_FILE screenHighScore.sv
+set_global_assignment -name SYSTEMVERILOG_FILE shifter.sv
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
