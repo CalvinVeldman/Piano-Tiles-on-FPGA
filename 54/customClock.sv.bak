@@ -1,8 +1,0 @@
-module slowClk(output logic clk);
-parameter period = 10;
-initial begin
-clk = 0;
-end
-
-always #(period / 2) clk = ~clk;
-endmodule
